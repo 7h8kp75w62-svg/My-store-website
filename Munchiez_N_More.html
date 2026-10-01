@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Munchiez N More</title>
+<style>
+:root{--bg:#fff8ef;--ink:#25170e;--accent:#ff6b35;--accent2:#ffd166;--card:#fff;--muted:#735f52;--green:#3a9d5d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#ff6b35,#ff9f43);color:#fff;padding:18px 7%;position:sticky;top:0;z-index:5;box-shadow:0 5px 20px #0002}
+nav{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:25px;font-weight:900}.brand span{color:#fff3a6}
+nav a{color:white;text-decoration:none;font-weight:700;margin-left:16px}
+.hero{padding:75px 7% 60px;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;background:radial-gradient(circle at 80% 20%,#ffd166 0 12%,transparent 13%),var(--bg)}
+h1{font-size:clamp(45px,7vw,78px);line-height:.95;margin:10px 0}.hero p{font-size:20px;color:var(--muted);max-width:620px}
+.badge{display:inline-block;background:#25170e;color:white;padding:8px 13px;border-radius:999px;font-weight:800}
+.cta{display:inline-block;background:#25170e;color:#fff;text-decoration:none;padding:13px 18px;border-radius:14px;font-weight:800;margin-top:10px}
+.logo-placeholder{min-height:270px;border:3px dashed #25170e;border-radius:35px;display:grid;place-items:center;background:#fff;transform:rotate(2deg);font-weight:900;font-size:24px;text-align:center;padding:25px}
+section{padding:55px 7%}section h2{font-size:38px;margin:0 0 10px}.sub{color:var(--muted);margin-top:0}
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:25px 0}.day{border:0;background:#fff;border-radius:18px;padding:18px 8px;font-weight:900;cursor:pointer;box-shadow:0 5px 15px #00000012}.day.active{background:#25170e;color:white}
+.category-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 12px}
+.category{border:2px solid #eaded5;background:#fff;border-radius:999px;padding:12px 18px;font-weight:900;cursor:pointer}
+.category.active{background:#ff6b35;color:#fff;border-color:#ff6b35}
+.menu-card{background:white;border-radius:24px;padding:24px;box-shadow:0 8px 25px #00000012;min-height:180px}.items{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.item{padding:15px;border:1px solid #eaded5;border-radius:16px}.price{font-weight:900;color:var(--accent)}.stock{font-size:13px;color:var(--green);font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.info{background:#fff;border-radius:22px;padding:22px;box-shadow:0 8px 25px #00000012}.cake{border-top:7px solid var(--accent2)}
+footer{background:#25170e;color:#fff;padding:35px 7%;text-align:center}
+@media(max-width:750px){.hero{grid-template-columns:1fr}.days{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}nav a{display:none}}
+
+/* Cake Corner inventory editor */
+.cake-corner-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.cake-viewer,.cake-editor{background:#fff;border-radius:18px;padding:22px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.cake-viewer h3,.cake-editor h3{margin-top:0}
+.cake-list{display:grid;gap:12px}
+.cake-card{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;border:1px solid #eee;border-radius:14px;background:#fffaf5}
+.cake-card strong{display:block}
+.stock-count{font-weight:800;color:#d95f02}
+.editor-row{display:grid;grid-template-columns:1fr 90px 70px;gap:10px;align-items:center;margin:10px 0}
+.editor-row label{font-weight:700}
+.editor-row input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px}
+.editor-row input[type="number"]{box-sizing:border-box}
+.editor-row input[type="checkbox"]{width:20px;height:20px}
+.save-cakes{width:100%;border:0;border-radius:12px;padding:12px;background:#f97316;color:white;font-weight:800;cursor:pointer;margin-top:10px}
+.editor-note{font-size:.9rem;color:#666}
+@media(max-width:750px){.cake-corner-grid{grid-template-columns:1fr}.editor-row{grid-template-columns:1fr 80px 55px}}
+
+</style>
+</head>
+<body>
+<header><nav><div class="brand">🍪 Munchiez <span>N More</span></div><div><a href="#menu">Menu</a><a href="#cakes">Cakes</a><a href="#stock">Stock</a><a href="#find">Find Us</a></div></nav></header>
+
+<main>
+<section class="hero">
+<div><span class="badge">Student Snack Spot</span><h1>Munchiez<br>N More 🍰</h1>
+<p>Fresh snacks, sweet treats, cakes and more. Check what we're selling on each day, see what's in stock, and find where to get us.</p>
+<a class="cta" href="#menu">See This Week's Menu ↓</a></div>
+<div class="logo-placeholder">YOUR<br>SCHOOL LOGO<br>GOES HERE</div>
+</section>
+
+<section id="menu"><h2>Snack Bar 🍿</h2><p class="sub">Pick a day, then choose a snack category.</p>
+<div class="days" id="days"></div>
+<div class="category-tabs">
+<button class="category active" data-category="cakes">🍰 Cakes</button>
+<button class="category" data-category="drinks">🥤 Drinks</button>
+<button class="category" data-category="snacks">🍿 Chips & Candy</button>
+</div>
+<div class="menu-card" id="menuCard"></div></section>
+
+<section id="cakes"><h2>Cake Corner 🎂</h2><p class="sub">Cake flavors and types we'll be offering. Availability can change by day.</p>
+<div class="grid">
+<div class="info cake"><h3>Chocolate Cake</h3><p>Rich chocolate cake with a sweet frosting.</p><b>$3.00 / slice</b></div>
+<div class="info cake"><h3>Vanilla Cake</h3><p>Classic vanilla cake with creamy frosting.</p><b>$3.00 / slice</b></div>
+<div class="info cake"><h3>Funfetti</h3><p>Vanilla cake packed with colorful sprinkles.</p><b>$3.50 / slice</b></div>
+</div></section>
+
+<section id="stock"><h2>What's In Stock?</h2><div class="items">
+<div class="item"><b>Cookies</b><div class="stock">● In stock</div></div>
+<div class="item"><b>Chips</b><div class="stock">● In stock</div></div>
+<div class="item"><b>Brownies</b><div class="stock">● In stock</div></div>
+<div class="item"><b>Cake slices</b><div class="stock">● Limited</div></div>
+</div></section>
+
+<section id="find"><h2>Where To Find Us 📍</h2><div class="info"><h3>Our School</h3><p>We're located at <b>YOUR SCHOOL / CAMPUS</b>.</p><p>Look for the Munchiez N More table during our selling times. Exact location and times can be added here.</p><p><b>Hours:</b> Add your selling days & times here.</p></div></section>
+<section id="cake-corner" class="section">
+  <div class="container">
+    <h2>🍰 Cake Corner</h2>
+    <p class="section-subtitle">View today's cakes and see how many are still available.</p>
+
+    
+<div class="day-buttons" style="margin:18px 0">
+  <button onclick="setCakeDay('Monday')">Monday</button>
+  <button onclick="setCakeDay('Tuesday')">Tuesday</button>
+  <button onclick="setCakeDay('Wednesday')">Wednesday</button>
+  <button onclick="setCakeDay('Thursday')">Thursday</button>
+  <button onclick="setCakeDay('Friday')">Friday</button>
+</div>
+
+    <div class="cake-corner-grid">
+      <div class="cake-viewer">
+        <h3>Today's Cakes</h3>
+        <p id="cakeViewerDay" class="editor-note">Select a day below.</p>
+        <div id="cakeViewerList" class="cake-list"></div>
+      </div>
+
+      <div class="cake-editor">
+        <h3>🔒 Editor Inventory</h3>
+        <p class="editor-note">Editors can turn cakes on/off and set exactly how many are in stock for each day.</p>
+        <div id="cakeEditorList"></div>
+        <button class="save-cakes" onclick="saveCakeInventory()">Save Cake Inventory</button>
+        <p id="cakeSaveMessage" class="editor-note"></p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>🍪 Munchiez N More · Snacks • Sweets • Cakes</footer>
+
+<script>
+const menu={
+"Monday":{
+ cakes:[["Chocolate Cake Slice","$3.00","In stock"],["Vanilla Cake Slice","$3.00","In stock"]],
+ drinks:[["Water","$1.00","In stock"],["Fruit Punch","$1.50","In stock"]],
+ snacks:[["Chocolate Chip Cookies","$2.00","In stock"],["Chips","$1.50","In stock"],["Candy Mix","$1.50","Limited"]]
+},
+"Tuesday":{
+ cakes:[["Funfetti Cake Slice","$3.50","Limited"],["Vanilla Cake Slice","$3.00","In stock"]],
+ drinks:[["Water","$1.00","In stock"],["Juice","$1.50","In stock"]],
+ snacks:[["Fruit Snacks","$1.50","In stock"],["Chips","$1.50","In stock"],["Cookies","$2.00","In stock"]]
+},
+"Wednesday":{
+ cakes:[["Funfetti Cake Slice","$3.50","Limited"],["Chocolate Cake Slice","$3.00","In stock"]],
+ drinks:[["Water","$1.00","In stock"],["Fruit Punch","$1.50","In stock"]],
+ snacks:[["Chips","$1.50","In stock"],["Brownie","$2.50","In stock"],["Candy Mix","$1.50","In stock"]]
+},
+"Thursday":{
+ cakes:[["Chocolate Cake Slice","$3.00","In stock"],["Vanilla Cake Slice","$3.00","In stock"]],
+ drinks:[["Water","$1.00","In stock"],["Juice","$1.50","Limited"]],
+ snacks:[["Cookies","$2.00","In stock"],["Chips","$1.50","In stock"],["Candy Mix","$1.50","In stock"]]
+},
+"Friday":{
+ cakes:[["Surprise Cake Slice","$3.00","Limited"],["Funfetti Cake Slice","$3.50","Limited"]],
+ drinks:[["Water","$1.00","In stock"],["Fruit Punch","$1.50","In stock"]],
+ snacks:[["Surprise Treat","$3.00","Limited"],["Chips","$1.50","In stock"],["Candy Mix","$1.50","In stock"]]
+}
+};
+
+const labels={cakes:"Cakes",drinks:"Drinks",snacks:"Chips & Candy"};
+const days=document.getElementById("days"), card=document.getElementById("menuCard");
+let currentDay="Monday", currentCategory="cakes";
+
+Object.keys(menu).forEach((day,i)=>{
+ const b=document.createElement("button");
+ b.className="day"+(i===0?" active":"");
+ b.textContent=day;
+ b.onclick=()=>{document.querySelectorAll(".day").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentDay=day;show()};
+ days.appendChild(b);
+});
+
+document.querySelectorAll(".category").forEach(b=>{
+ b.onclick=()=>{
+  document.querySelectorAll(".category").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  currentCategory=b.dataset.category;
+  show();
+ };
+});
+
+function show(){
+ const items=menu[currentDay][currentCategory];
+ card.innerHTML="<h3>"+currentDay+" · "+labels[currentCategory]+"</h3><div class='items'>"+
+ items.map(x=>`<div class="item"><b>${x[0]}</b><p class="price">${x[1]}</p><div class="stock">● ${x[2]}</div></div>`).join("")+
+ "</div>";
+}
+show();
+
+/* Cake Corner inventory */
+const cakeTypes = [
+  "Chocolate Cake Slice",
+  "Vanilla Cake Slice",
+  "Funfetti Cake Slice",
+  "Red Velvet Cake Slice",
+  "Strawberry Cake Slice",
+  "Surprise Cake Slice"
+];
+
+const defaultCakeInventory = {
+  Monday: {
+    "Chocolate Cake Slice": 8, "Vanilla Cake Slice": 6, "Funfetti Cake Slice": 0,
+    "Red Velvet Cake Slice": 0, "Strawberry Cake Slice": 0, "Surprise Cake Slice": 0
+  },
+  Tuesday: {
+    "Chocolate Cake Slice": 0, "Vanilla Cake Slice": 5, "Funfetti Cake Slice": 6,
+    "Red Velvet Cake Slice": 0, "Strawberry Cake Slice": 0, "Surprise Cake Slice": 0
+  },
+  Wednesday: {
+    "Chocolate Cake Slice": 5, "Vanilla Cake Slice": 0, "Funfetti Cake Slice": 4,
+    "Red Velvet Cake Slice": 0, "Strawberry Cake Slice": 0, "Surprise Cake Slice": 0
+  },
+  Thursday: {
+    "Chocolate Cake Slice": 7, "Vanilla Cake Slice": 5, "Funfetti Cake Slice": 0,
+    "Red Velvet Cake Slice": 0, "Strawberry Cake Slice": 0, "Surprise Cake Slice": 0
+  },
+  Friday: {
+    "Chocolate Cake Slice": 0, "Vanilla Cake Slice": 0, "Funfetti Cake Slice": 3,
+    "Red Velvet Cake Slice": 0, "Strawberry Cake Slice": 0, "Surprise Cake Slice": 4
+  }
+};
+
+let cakeInventory = JSON.parse(localStorage.getItem("munchiezCakeInventory") || "null") || defaultCakeInventory;
+let selectedCakeDay = "Monday";
+
+function renderCakeCorner(day = selectedCakeDay) {
+  selectedCakeDay = day;
+  const viewerDay = document.getElementById("cakeViewerDay");
+  const viewerList = document.getElementById("cakeViewerList");
+  const editorList = document.getElementById("cakeEditorList");
+  if (!viewerList || !editorList) return;
+
+  viewerDay.textContent = `${day}'s Cake Corner`;
+
+  const stock = cakeInventory[day] || {};
+  const available = cakeTypes.filter(cake => Number(stock[cake] || 0) > 0);
+
+  viewerList.innerHTML = available.length
+    ? available.map(cake => `
+        <div class="cake-card">
+          <div><strong>${cake}</strong><span class="editor-note">Fresh and available</span></div>
+          <span class="stock-count">${Number(stock[cake])} in stock</span>
+        </div>
+      `).join("")
+    : `<div class="cake-card"><strong>No cakes in stock yet.</strong><span class="editor-note">Check back later.</span></div>`;
+
+  editorList.innerHTML = cakeTypes.map(cake => `
+    <div class="editor-row">
+      <label for="cake-${day}-${cake.replace(/[^a-z0-9]/gi,'-')}">${cake}</label>
+      <input
+        type="number"
+        min="0"
+        value="${Number(stock[cake] || 0)}"
+        id="cake-${day}-${cake.replace(/[^a-z0-9]/gi,'-')}"
+        data-cake="${cake}"
+      >
+      <input
+        type="checkbox"
+        title="Show this cake as available"
+        ${Number(stock[cake] || 0) > 0 ? "checked" : ""}
+        onchange="toggleCakeAvailability(this)"
+      >
+    </div>
+  `).join("");
+}
+
+function toggleCakeAvailability(box) {
+  const row = box.closest(".editor-row");
+  const input = row.querySelector('input[type="number"]');
+  if (!box.checked) input.value = 0;
+  else if (Number(input.value) === 0) input.value = 1;
+}
+
+function saveCakeInventory() {
+  const rows = document.querySelectorAll("#cakeEditorList .editor-row");
+  const updated = {};
+  updated[selectedCakeDay] = {};
+
+  rows.forEach(row => {
+    const input = row.querySelector('input[type="number"]');
+    updated[selectedCakeDay][input.dataset.cake] = Math.max(0, Number(input.value || 0));
+  });
+
+  cakeInventory[selectedCakeDay] = updated[selectedCakeDay];
+  localStorage.setItem("munchiezCakeInventory", JSON.stringify(cakeInventory));
+
+  const msg = document.getElementById("cakeSaveMessage");
+  msg.textContent = `Saved! ${selectedCakeDay}'s cake inventory is updated.`;
+  renderCakeCorner(selectedCakeDay);
+}
+
+function setCakeDay(day) {
+  renderCakeCorner(day);
+}
+
+document.addEventListener("DOMContentLoaded", () => renderCakeCorner("Monday"));
+
+</script>
+</body>
+</html>
